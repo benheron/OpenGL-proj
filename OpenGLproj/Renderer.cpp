@@ -22,8 +22,8 @@ Renderer::Renderer(EntityManager *em) : em(em)
 		programID = sp.getProgramID();
 
 
-		lightInt = glm::vec3(4);
-		lightPos = glm::vec3(4, 4, 2);
+		lightInt = glm::vec3(40);
+		lightPos = glm::vec3(0, 80, -50);
 
 
 
@@ -44,6 +44,19 @@ Renderer::Renderer(EntityManager *em) : em(em)
 		ambientID = glGetUniformLocation(programID, "ambientIntensity");
 		lightIntID = glGetUniformLocation(programID, "lightIntensity");
 		textureID = glGetUniformLocation(programID, "textureSampler");
+
+
+		skyboxTexture = new Texture();
+		skyboxTexture->loadTexture("models/textures/Skybox2.jpg");
+
+
+
+		ObjLoader objLoad;
+
+		Model* skyb = objLoad.loadObj("models/skybox.obj");
+		skybox = new Entity(skyb);
+
+		skybox->setTexture(skyboxTexture);
 	}
 
 
@@ -66,6 +79,9 @@ void Renderer::render(std::vector<State*> states)
 	for (int j = 0; j < states.size(); j++)
 	{
 		Camera *c = states[j]->getCamera();
+
+		
+
 		std::vector<Entity*> entities = states[j]->getRenderables();
 
 		glUseProgram(programID);
@@ -73,7 +89,7 @@ void Renderer::render(std::vector<State*> states)
 		//lighting
 		//glm::vec4 lightDirCameraSpace = viewMat * modelMat * g_lightDirection;
 
-		glm::mat4 projMat = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 1.0f, 8000.0f);
+		glm::mat4 projMat = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 1.0f, 400.0f);
 		glm::mat4 viewMat = glm::lookAt(
 			c->getPosition(),
 			c->getLookAtPos(),
@@ -96,6 +112,11 @@ void Renderer::render(std::vector<State*> states)
 
 
 		glUniform1f(attenuationID, lightAttenuation);
+
+		
+		glUniformMatrix4fv(viewMatID, 1, GL_FALSE, &viewMat[0][0]);
+
+		renderSkybox(c, projMat, viewMat);
 
 		for (int i = 0; i < entities.size(); i++)
 		{
@@ -121,7 +142,7 @@ void Renderer::render(std::vector<State*> states)
 
 
 
-
+			glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &modelMat[0][0]);
 
 
 			bool nonuniformscale = false;
@@ -132,8 +153,7 @@ void Renderer::render(std::vector<State*> states)
 
 			glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);
 
-			glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &modelMat[0][0]);
-			glUniformMatrix4fv(viewMatID, 1, GL_FALSE, &viewMat[0][0]);
+			
 
 
 
@@ -230,4 +250,94 @@ void Renderer::render(std::vector<State*> states)
 
 
 
+}
+
+
+void Renderer::renderSkybox(Camera *c, glm::mat4 p, glm::mat4 v)
+{
+	glDepthMask(0);
+
+	//get model matrix for this specific model
+	glm::mat4 modelMat = skybox->getModelMatrix();
+	//new mvp
+	glm::mat4 mvp = p * v * modelMat;
+
+	skybox->setPosition(c->getPosition(), 0);
+
+	Model* m = skybox->getModel();
+	//vertices buffer
+	GLuint vertexBuffer = m->getVertexBuffer();
+
+	//normal buffer
+	GLuint uvBuffer = m->getUVBuffer();
+
+	//normals buffer
+	GLuint normalBuffer = m->getNormalBuffer();
+
+	//indices buffer
+	GLuint indexBuffer = m->getIndexBuffer();
+
+	GLsizei indexSize = m->getVertexIndices().size();
+
+
+
+
+	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);
+
+	glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &modelMat[0][0]);
+
+
+
+
+
+	// Bind our texture in Texture Unit 0
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, skybox->getTexture()->getTextureID());
+	// Set our "myTextureSampler" sampler to use Texture Unit 0
+	glUniform1i(textureID, 0);
+
+	//enable vertex position
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glVertexAttribPointer(
+		0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+
+
+	// 2nd attribute buffer : colors
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+	glVertexAttribPointer(
+		1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+		2,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+	);
+
+
+	// 3rd attribute buffer : normals
+	glEnableVertexAttribArray(2);
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+	glVertexAttribPointer(
+		2,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+		3,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+	);
+
+	//set index data and render
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	glDrawElements(GL_TRIANGLES, indexSize, GL_UNSIGNED_INT, (void*)0);
+
+
+	glDepthMask(1);
 }

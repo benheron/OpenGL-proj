@@ -6,7 +6,7 @@
 class Model {
 public:
 	Model(std::vector<glm::vec3> vertices, std::vector<glm::vec2> UVs, std::vector<glm::vec3> vertNormals,
-		std::vector<unsigned int> vertexIndices, std::vector<unsigned int> uvIndices, std::vector<unsigned int> normalIndices);
+		std::vector<unsigned int> vertexIndices, float width, float height, float depth, glm::vec3 medianPos);
 	~Model();
 
 
@@ -15,8 +15,13 @@ public:
 	std::vector<glm::vec3> getVertNormals();
 
 	std::vector<unsigned int> getVertexIndices();
-	std::vector<unsigned int> getUVIndices();
-	std::vector<unsigned int> getNormalIndices();
+
+	float getWidth();
+	float getHeight();
+	float getDepth();
+
+	glm::vec3 getMedian();
+
 
 	GLuint getVertexBuffer();
 	GLuint getUVBuffer();
@@ -29,7 +34,7 @@ protected:
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> UVs;
 	std::vector<glm::vec3> vertNormals;
-	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
+	std::vector<unsigned int> vertexIndices;
 
 
 	GLuint vertexBuffer;
@@ -39,4 +44,6 @@ protected:
 	GLuint indexBuffer;
 
 	glm::vec3 median;
+
+	float width, height, depth;
 };

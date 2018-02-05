@@ -9,6 +9,8 @@ ModelManager::ModelManager()
 
 
 	Model *obj = objLoad.loadObj("models/House2.obj");
+
+	
 	
 	models["house"] = obj;
 	textures["house"] = testTexture;

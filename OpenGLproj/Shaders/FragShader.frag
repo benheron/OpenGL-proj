@@ -19,6 +19,7 @@ uniform vec3 lightIntensity;
 uniform vec3 ambientIntensity;
 uniform float lightAttenuation;
 
+
 uniform vec3 lightPosCameraSpace;
 
 uniform sampler2D textureSampler;
@@ -96,7 +97,7 @@ uniform sampler2D textureSampler;
 
 
 					
-	//colour = vec3(1.0, 0, 0);
+//	colour = vec3(1.0, 0, 0);
 	
  }
 

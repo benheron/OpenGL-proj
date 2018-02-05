@@ -24,7 +24,12 @@ public:
 	~Renderer();
 
 	void render(std::vector<State*> states);
+
+
 protected:
+
+	void renderSkybox(Camera *c, glm::mat4 p, glm::mat4 v);
+
 
 	EntityManager *em;
 
@@ -49,6 +54,9 @@ protected:
 	GLuint textureID;
 
 	GLuint VertexArrayID;
+
+	Texture *skyboxTexture;
+	Entity* skybox;
 
 
 };

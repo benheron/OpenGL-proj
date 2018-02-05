@@ -6,6 +6,8 @@
 #include "../Keyboard.h"
 #include "../entities/EntityManager.h"
 #include "../Camera.h"
+#include "../ObstacleBlock.h"
+
 
 
 
@@ -37,7 +39,6 @@ public:
 
 	std::vector<Entity*> getRenderables();
 
-	Camera* getCamera();
 	
 protected:
 
@@ -54,7 +55,16 @@ protected:
 
 	void playerHandling();
 
+
+	void generateObstaclesPositions();
+
+	void placeObstacles(int block);
+
+	float randFloat(float fMin, float fMax);
 	
+	std::vector<std::vector<Entity*>> houses;
+
+	std::vector<ObstacleBlock*> obstacles;
 
 	Entity *player;
 
@@ -63,6 +73,17 @@ protected:
 
 	float blockSpeed;
 
+	int numHousesPerBlock;
+	int numBlocks;
 
-	
+
+	float distHousetravelled;
+	float blockWidth;
+	int blockIndex;
+
+
+	int lastBlockIndex;
+
+	float lowX, lowZ, highX, highZ;
+	float xWidth, zWidth;
 };

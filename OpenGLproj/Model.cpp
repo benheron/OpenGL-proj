@@ -1,8 +1,8 @@
 #include "Model.h"
 
 Model::Model(std::vector<glm::vec3> vertices, std::vector<glm::vec2> UVs, std::vector<glm::vec3> vertNormals, 
-	std::vector<unsigned int> vertexIndices, std::vector<unsigned int> uvIndices, std::vector<unsigned int> normalIndices) :
-	vertices(vertices), UVs(UVs), vertNormals(vertNormals), vertexIndices(vertexIndices), uvIndices(uvIndices), normalIndices(normalIndices)
+	std::vector<unsigned int> vertexIndices, float width, float height, float depth, glm::vec3 medianPos) :
+	vertices(vertices), UVs(UVs), vertNormals(vertNormals), vertexIndices(vertexIndices), width(width), height(height), depth(depth), median(medianPos)
 {
 
 	glGenBuffers(1, &normalBuffer);
@@ -55,14 +55,30 @@ std::vector<unsigned int> Model::getVertexIndices()
 {
 	return vertexIndices;
 }
-std::vector<unsigned int> Model::getUVIndices()
+
+float Model::getWidth()
 {
-	return uvIndices;
+	return width;
 }
-std::vector<unsigned int> Model::getNormalIndices()
+
+float Model::getHeight()
 {
-	return normalIndices;
+	return height;
 }
+
+
+float Model::getDepth()
+{
+	return depth;
+}
+
+
+glm::vec3 Model::getMedian()
+{
+	return median;
+}
+
+
 
 GLuint Model::getVertexBuffer()
 {
