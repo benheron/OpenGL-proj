@@ -19,7 +19,8 @@ Entity* EntityManager::getNewEntity(std::string ms)
 {
 	Model* m = mm->getModelByName(ms);
 	Texture* t= mm->getTextureByName(ms);
-	Entity *e = new Entity(m);
+	Entity *e = new Entity();
+	e->setModel(m);
 	e->setTexture(t);
 
 	entities.push_back(e);

@@ -18,6 +18,7 @@
 #include "states/StateManager.h"
 #include "states/GameState.h"
 #include "Renderer.h"
+#include "text/TextImageManager.h"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -25,10 +26,10 @@ const int SCREEN_HEIGHT = 480;
 
 
 //Starts up SDL, creates window, and initializes OpenGL
-bool init();
+//bool init();
 
 //Initializes matrices and clear color
-bool initGL();
+//bool initGL();
 
 //Input handler
 void handleKeys(SDL_Event keyType, bool bKeyDown, int x, int y);
@@ -105,6 +106,7 @@ Entity *e;
 glm::vec3 lightInt = glm::vec3(4);
 glm::vec3 lightPos = glm::vec3(4, 4, 2);
 
+/*
 bool init()
 {
 
@@ -170,8 +172,10 @@ bool init()
 	return success;
 }
 
+*/
 
 
+/*
 bool initGL()
 {
 	bool success = true;
@@ -261,7 +265,7 @@ bool initGL()
 	}
 
 	return success;
-}
+}*/
 
 
 void handleKeys(SDL_Event events, bool bKeyDown, int x, int y)
@@ -536,9 +540,11 @@ int main( int argc, char* args[] )
 
 	EntityManager *em = new EntityManager();
 	kbManager = new KeyboardManager();
+
+	TextImageManager *tim = new TextImageManager("res/fonts/fontarial.txt");
 	
 	StateManager *stateManager = new StateManager();
-	GameState *gs = new GameState(stateManager, platform, em, kbManager);
+	GameState *gs = new GameState(stateManager, platform, em, kbManager, tim);
 	stateManager->addState(gs);
 
 	Renderer* renderer = new Renderer(em);
@@ -568,6 +574,10 @@ int main( int argc, char* args[] )
 		lastTime = current;
 
 
+		if (dt > 0.050)
+		{
+			dt = 0.050;
+		}
 
 		//Handle events on queue
 		while( SDL_PollEvent( &e ))

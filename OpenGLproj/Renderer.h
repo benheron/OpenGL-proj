@@ -29,7 +29,7 @@ public:
 protected:
 
 	void renderSkybox(Camera *c, glm::mat4 p, glm::mat4 v);
-
+	void renderText(std::vector<Text*> stateText);
 
 	EntityManager *em;
 
@@ -38,6 +38,8 @@ protected:
 	float lightAttenuation = 1.0;
 
 	ShaderProgram sp;
+
+	ShaderProgram txtShader;
 
 
 	GLuint programID;
@@ -54,6 +56,10 @@ protected:
 	GLuint textureID;
 
 	GLuint VertexArrayID;
+
+
+	//text
+	GLuint Text2DUniformID;
 
 	Texture *skyboxTexture;
 	Entity* skybox;

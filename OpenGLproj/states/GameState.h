@@ -5,6 +5,7 @@
 #include "../Entity.h"
 #include "../Keyboard.h"
 #include "../entities/EntityManager.h"
+#include "../text/Text.h"
 #include "../Camera.h"
 #include "../ObstacleBlock.h"
 
@@ -14,7 +15,7 @@
 class GameState : public State
 {
 public:
-	GameState(StateManager* manager, Platform *platform, EntityManager* em, KeyboardManager *km);
+	GameState(StateManager* manager, Platform *platform, EntityManager* em, KeyboardManager *km, TextImageManager *tim);
 	virtual ~GameState();
 
 	/**
@@ -37,7 +38,9 @@ public:
 	void render();
 
 
-	std::vector<Entity*> getRenderables();
+	//std::vector<Entity*> getRenderables();
+
+	//std::vector<Entity*> getUIEntities();
 
 	
 protected:
@@ -70,6 +73,7 @@ protected:
 
 	EntityManager *em;
 	KeyboardManager *km;
+	TextImageManager *tim;
 
 	float blockSpeed;
 
@@ -86,4 +90,9 @@ protected:
 
 	float lowX, lowZ, highX, highZ;
 	float xWidth, zWidth;
+
+	Text *scoreInt;
+	Text *scoreWord;
+
+	float score;
 };

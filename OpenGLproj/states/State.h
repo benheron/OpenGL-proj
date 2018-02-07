@@ -3,6 +3,7 @@
 
 #include "../Entity.h"
 #include "../Camera.h"
+#include "../text/Text.h"
 
 #pragma once
 
@@ -73,6 +74,8 @@ public:
 
 	std::vector<Entity*> getRenderables();
 
+	std::vector<Text*> getStateText();
+
 	Camera* getCamera();
 
 
@@ -109,5 +112,6 @@ protected:
 
 
 	std::vector<Entity*> entities;
+	std::vector<Text*> stateText;
 	Camera *camera;
 };

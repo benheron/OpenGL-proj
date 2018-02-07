@@ -15,7 +15,7 @@ public:
 
 	bool loadShader(std::string filePath, GLenum shaderType, GLuint &shader);
 
-	bool loadProgram();
+	bool loadProgram(std::string vertShaderPath, std::string fragShaderPath);
 
 	void deleteProgram();
 

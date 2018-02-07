@@ -34,6 +34,11 @@ std::vector<Entity*> State::getRenderables()
 	return entities;
 }
 
+std::vector<Text*> State::getStateText()
+{
+	return stateText;
+}
+
 Camera *State::getCamera()
 {
 	return camera;

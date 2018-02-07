@@ -66,7 +66,7 @@ bool ShaderProgram::loadShader(std::string filePath, GLenum shaderType, GLuint &
 	return true;
 }
 
-bool ShaderProgram::loadProgram()
+bool ShaderProgram::loadProgram(std::string vertShaderPath, std::string fragShaderPath)
 {
 
 	programID = glCreateProgram();
@@ -74,8 +74,8 @@ bool ShaderProgram::loadProgram()
 	GLuint vertexShader, fragmentShader;
 
 	//load shaders
-	loadShader("Shaders/VertShader.vert", GL_VERTEX_SHADER, vertexShader);
-	loadShader("Shaders/FragShader.frag", GL_FRAGMENT_SHADER, fragmentShader);
+	loadShader(vertShaderPath, GL_VERTEX_SHADER, vertexShader);
+	loadShader(fragShaderPath, GL_FRAGMENT_SHADER, fragmentShader);
 
 
 	for (int i = 0; i < allShaders.size(); i++)

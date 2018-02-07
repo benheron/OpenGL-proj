@@ -6,12 +6,16 @@
 
 class Entity {
 public:
-	Entity(Model* m_);
+	Entity(glm::vec3 pos = glm::vec3(0), glm::vec3 dimens = glm::vec3(0));
 	~Entity();
 
 
-	void setPosition(glm::vec3 pos, bool add);
+	void setModel(Model *m);
+
+	void setPosition(glm::vec3 p, bool add = false);
 	glm::vec3 getPosition();
+
+	glm::vec3 getDimensions();
 
 //	void setRotation(glm::vec3 rot, glm::vec3 axis);
 
@@ -56,11 +60,13 @@ protected:
 
 	float speed;
 
-	glm::vec3 modelPos;
+	glm::vec3 pos;
 	Texture *modTexture;
 
 	glm::vec3 forwardVec;
 	glm::vec3 upVec;
 	glm::vec3 rightVec;
+
+	glm::vec3 dimensions;
 	
 };

@@ -1,6 +1,6 @@
 #include "GameState.h"
 
-GameState::GameState(StateManager* manager, Platform *platform, EntityManager *em, KeyboardManager *km) : State(manager, platform), em(em), km(km)
+GameState::GameState(StateManager* manager, Platform *platform, EntityManager *em, KeyboardManager *km, TextImageManager *tim) : State(manager, platform), em(em), km(km), tim(tim)
 {
 
 }
@@ -17,6 +17,8 @@ bool GameState::eventHandler()
 
 void GameState::update(float dt)
 {
+	score += 20 * dt;
+
 	playerHandling();
 
 	for (int i = 0; i < numBlocks; i++)
@@ -37,7 +39,11 @@ void GameState::update(float dt)
 		}
 	}
 
+	int curScore = int(score);
 
+	std::string str = std::to_string(curScore);
+
+	scoreInt->changeTextEnd(str);
 	
 }
 
@@ -68,6 +74,10 @@ void GameState::load()
 	camera->setPosition(glm::vec3(0, 14, -75), false);
 	camera->setLookAtPos(player->getModel()->getMedian(), false);
 	camera->setUpVector(glm::vec3(0, 1, 0), false);
+
+	//camera->setPosition(glm::vec3(0, 0, 0), false);
+	//camera->setLookAtPos(glm::vec3(0, 0, 4), false);
+	//camera->setUpVector(glm::vec3(0, 1, 0), false);
 
 
 	lowX = -48.f;
@@ -111,6 +121,20 @@ void GameState::load()
 
 	player->setPosition(glm::vec3(0, 0, -49), 0);
 
+
+
+
+
+	//uiload
+	score = 0;
+	scoreWord = new Text(glm::vec3(10.f, 500.f, 0), "arial", 32, "Score:", tim);
+
+	
+
+	scoreInt = new Text(glm::vec3(100.f, 500.f, 0), "arial", 32, "0000000", tim);
+
+	stateText.push_back(scoreWord);
+	stateText.push_back(scoreInt);
 	
 }
 
@@ -213,3 +237,5 @@ float GameState::randFloat(float fMin, float fMax)
 	float f = (float)rand() / RAND_MAX;
 	return fMin + f * (fMax - fMin);
 }
+
+

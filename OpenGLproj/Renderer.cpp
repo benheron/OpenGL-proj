@@ -3,7 +3,7 @@
 Renderer::Renderer(EntityManager *em) : em(em)
 {
 	
-	if (sp.loadProgram())
+	if (sp.loadProgram("Shaders/VertShader.vert", "Shaders/FragShader.frag"))
 	{
 
 
@@ -54,11 +54,16 @@ Renderer::Renderer(EntityManager *em) : em(em)
 		ObjLoader objLoad;
 
 		Model* skyb = objLoad.loadObj("models/skybox.obj");
-		skybox = new Entity(skyb);
+		skybox = new Entity();
+		skybox->setModel(skyb);
 
 		skybox->setTexture(skyboxTexture);
 	}
 
+	if (txtShader.loadProgram("Shaders/TextVertShader.vert", "Shaders/TextFragShader.frag"))
+	{
+		Text2DUniformID = glGetUniformLocation(txtShader.getProgramID(), "myTextureSampler");
+	}
 
 
 }
@@ -220,10 +225,10 @@ void Renderer::render(std::vector<State*> states)
 		}
 
 
+		
+		renderText(states[j]->getStateText());
 
-
-
-
+		
 	}
 	
 
@@ -242,6 +247,16 @@ void Renderer::render(std::vector<State*> states)
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
+
+
+
+
+
+
+
+
+
+
 
 	//unbind program
 	glUseProgram(NULL);
@@ -340,4 +355,55 @@ void Renderer::renderSkybox(Camera *c, glm::mat4 p, glm::mat4 v)
 
 
 	glDepthMask(1);
+}
+
+void Renderer::renderText(std::vector<Text*> stateText)
+{
+	GLuint txtProgramId = txtShader.getProgramID();
+
+	glUseProgram(txtProgramId);
+
+	for (int i = 0; i < stateText.size(); i++)
+	{
+
+		Model* m = stateText[i]->getModel();
+		//vertices buffer
+		GLuint vertexBuffer = m->getVertexBuffer2D();
+
+		//normal buffer
+		GLuint uvBuffer = m->getUVBuffer();
+
+
+		GLsizei indexSize = m->getVertices2D().size();
+
+		GLuint fontID =  stateText[i]->getFontTexture()->getTextureID();
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, fontID);
+		// Set our "myTextureSampler" sampler to use Texture Unit 0
+		glUniform1i(Text2DUniformID, 0);
+
+		// 1rst attribute buffer : vertices
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		// 2nd attribute buffer : UVs
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		// Draw call
+		glDrawArrays(GL_TRIANGLES, 0, indexSize);
+
+		glDisable(GL_BLEND);
+	}
+
+	
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	
 }

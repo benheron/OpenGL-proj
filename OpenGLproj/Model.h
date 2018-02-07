@@ -7,6 +7,8 @@ class Model {
 public:
 	Model(std::vector<glm::vec3> vertices, std::vector<glm::vec2> UVs, std::vector<glm::vec3> vertNormals,
 		std::vector<unsigned int> vertexIndices, float width, float height, float depth, glm::vec3 medianPos);
+
+	Model(std::vector<glm::vec2> vertices2D, std::vector<glm::vec2> UVs);
 	~Model();
 
 
@@ -15,6 +17,9 @@ public:
 	std::vector<glm::vec3> getVertNormals();
 
 	std::vector<unsigned int> getVertexIndices();
+
+
+	std::vector<glm::vec2> getVertices2D();
 
 	float getWidth();
 	float getHeight();
@@ -28,13 +33,23 @@ public:
 	GLuint getNormalBuffer();
 
 	GLuint getIndexBuffer();
+	GLuint getVertexBuffer2D();
 
+	void changeUVBUffer(int startIndex, std::vector<glm::vec2> nUVs);
 
 protected:
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> UVs;
 	std::vector<glm::vec3> vertNormals;
 	std::vector<unsigned int> vertexIndices;
+
+	std::vector<glm::vec2> vertices2D;
+	std::vector<glm::vec2> UVs2D;
+	GLuint UVsBuffer2D;
+
+
+	GLuint vertexBuffer2D;
+
 
 
 	GLuint vertexBuffer;

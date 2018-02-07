@@ -1,6 +1,6 @@
 #include "Entity.h"
 
-Entity::Entity(Model* m) : model(m)
+Entity::Entity(glm::vec3 pos, glm::vec3 dimens) : pos(pos), dimensions(dimens)
 {
 	modelMatChanged = true;
 	rotMatrix = glm::mat4(1.0);
@@ -11,7 +11,7 @@ Entity::Entity(Model* m) : model(m)
 	rotYaw = 0;
 	rotRoll = 0;
 
-	modelPos = glm::vec3(0);
+	pos = glm::vec3(0);
 	modScale = glm::vec3(1.0);
 
 
@@ -29,19 +29,24 @@ Entity::~Entity()
 }
 
 
-glm::vec3 Entity::getPosition()
+void Entity::setModel(Model *m)
 {
-	return modelPos;
+	model = m;
 }
 
-void Entity::setPosition(glm::vec3 pos, bool add)
+glm::vec3 Entity::getPosition()
+{
+	return pos;
+}
+
+void Entity::setPosition(glm::vec3 p, bool add)
 {
 	if (add)
 	{
-		modelPos += pos;
+		pos += p;
 	}
 	else {
-		modelPos = pos;
+		pos = p;
 	}
 	modelMatChanged = true;
 }
@@ -115,7 +120,7 @@ glm::mat4 Entity::getModelMatrix()
 	//forwardVec = glm::rotate()
 
 	//translate to new position
-	mm = glm::translate(mm, modelPos);
+	mm = glm::translate(mm, pos);
 	
 	//rotate x
 	mm = glm::rotate(mm, rotPitch, glm::vec3(1, 0, 0));
@@ -138,7 +143,7 @@ void Entity::strafeLeft()
 	glm::vec4 v = modelMatrix[0] * speed;
 	glm::vec3 v1(v);
 
-	modelPos += v1;
+	pos += v1;
 
 
 
@@ -150,7 +155,7 @@ void Entity::strafeRight()
 	glm::vec4 v = modelMatrix[0] * speed;
 	glm::vec3 v1(v);
 
-	modelPos -= v1;
+	pos -= v1;
 
 	//modelPos += (rightVec * speed);
 }
@@ -161,7 +166,7 @@ void Entity::moveForward()
 	glm::vec4 v = modelMatrix[2] * speed;
 	glm::vec3 v1(v);
 
-	modelPos += v1;
+	pos += v1;
 }
 
 void Entity::moveBackward()
@@ -169,10 +174,23 @@ void Entity::moveBackward()
 	glm::vec4 v = modelMatrix[2] * speed;
 	glm::vec3 v1(v);
 
-	modelPos -= v1;
+	pos -= v1;
 }
 
 void Entity::setScale(glm::vec3 s)
 {
 	modScale = s;
+}
+
+glm::vec3 Entity::getDimensions()
+{
+	/*float xWidth = model->getWidth() * modScale.x;
+	float yHeight = model->getHeight() * modScale.y;
+	float zDepth = model->getDepth() * modScale.z;
+
+	glm::vec3 dimensions = glm::vec3(xWidth, yHeight, zDepth);*/
+
+	return dimensions;
+
+
 }
