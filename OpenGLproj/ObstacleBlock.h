@@ -1,5 +1,6 @@
 #pragma once
 #include "entities/EntityManager.h"
+#include "Collision.h"
 
 
 class ObstacleBlock
@@ -8,6 +9,8 @@ public:
 	ObstacleBlock(std::vector<Entity*> blockObstacles);
 	~ObstacleBlock();
 
+	void update(float dt);
+
 	void setXZLowHigh(float xLow, float xHigh, float zLow, float zHigh, float widthX, float widthZ);
 
 	void generateObstacles(EntityManager *em);
@@ -15,6 +18,8 @@ public:
 	void changePosition(float zPos);
 
 	void addZ(float speeddt);
+
+	bool collide(BoundingBox *bb);
 
 	float getHighZ();
 

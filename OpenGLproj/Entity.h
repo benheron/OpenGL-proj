@@ -2,6 +2,7 @@
 #include "Model.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "Texture.h"
+#include "BoundingBox.h"
 
 
 class Entity {
@@ -9,6 +10,7 @@ public:
 	Entity(glm::vec3 pos = glm::vec3(0), glm::vec3 dimens = glm::vec3(0));
 	~Entity();
 
+	void update(float dt);
 
 	void setModel(Model *m);
 
@@ -42,7 +44,7 @@ public:
 
 	void moveBackward();
 
-
+	BoundingBox *getBoundingBox();
 protected:
 	bool modelMatChanged;
 
@@ -69,4 +71,7 @@ protected:
 
 	glm::vec3 dimensions;
 	
+	BoundingBox *bb;
+
+	glm::vec3 bbAllowance;
 };

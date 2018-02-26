@@ -19,6 +19,7 @@
 #include "states/GameState.h"
 #include "Renderer.h"
 #include "text/TextImageManager.h"
+#include <time.h>
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -537,6 +538,8 @@ int main( int argc, char* args[] )
 		printf( "Failed to initialize!\n" );
 		return 1;
 	}*/
+
+	srand(time(NULL));
 
 	EntityManager *em = new EntityManager();
 	kbManager = new KeyboardManager();

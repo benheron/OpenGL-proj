@@ -22,7 +22,7 @@ Renderer::Renderer(EntityManager *em) : em(em)
 		programID = sp.getProgramID();
 
 
-		lightInt = glm::vec3(40);
+		lightInt = glm::vec3(45);
 		lightPos = glm::vec3(0, 80, -50);
 
 
@@ -65,6 +65,15 @@ Renderer::Renderer(EntityManager *em) : em(em)
 		Text2DUniformID = glGetUniformLocation(txtShader.getProgramID(), "myTextureSampler");
 	}
 
+	if (skyboxShader.loadProgram("Shaders/SkyboxVertShader.vert", "Shaders/SkyboxFragShader.frag"))
+	{
+		skyboxTextID = glGetUniformLocation(skyboxShader.getProgramID(), "textureSampler");
+
+		SBmvpID = glGetUniformLocation(skyboxShader.getProgramID(), "mvp");
+		SBviewMatID = glGetUniformLocation(skyboxShader.getProgramID(), "v");
+		SBmodelMatID = glGetUniformLocation(skyboxShader.getProgramID(), "m");
+	}
+
 
 }
 
@@ -89,16 +98,18 @@ void Renderer::render(std::vector<State*> states)
 
 		std::vector<Entity*> entities = states[j]->getRenderables();
 
-		glUseProgram(programID);
-
-		//lighting
-		//glm::vec4 lightDirCameraSpace = viewMat * modelMat * g_lightDirection;
-
 		glm::mat4 projMat = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 1.0f, 400.0f);
 		glm::mat4 viewMat = glm::lookAt(
 			c->getPosition(),
 			c->getLookAtPos(),
 			c->getUpVector());
+
+		renderSkybox(c, projMat, viewMat);
+
+		//lighting
+		//glm::vec4 lightDirCameraSpace = viewMat * modelMat * g_lightDirection;
+		glUseProgram(programID);
+		
 
 		glm::vec3 lightCameraPos = viewMat * glm::vec4(lightPos, 1);
 		glm::mat4 matInverse = glm::inverse(viewMat);
@@ -120,9 +131,10 @@ void Renderer::render(std::vector<State*> states)
 
 		
 		glUniformMatrix4fv(viewMatID, 1, GL_FALSE, &viewMat[0][0]);
+	
 
-		renderSkybox(c, projMat, viewMat);
-
+		
+	
 		for (int i = 0; i < entities.size(); i++)
 		{
 			//get model matrix for this specific model
@@ -272,6 +284,9 @@ void Renderer::renderSkybox(Camera *c, glm::mat4 p, glm::mat4 v)
 {
 	glDepthMask(0);
 
+
+	glUseProgram(skyboxShader.getProgramID());
+
 	//get model matrix for this specific model
 	glm::mat4 modelMat = skybox->getModelMatrix();
 	//new mvp
@@ -297,9 +312,9 @@ void Renderer::renderSkybox(Camera *c, glm::mat4 p, glm::mat4 v)
 
 
 
-	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &mvp[0][0]);
-
-	glUniformMatrix4fv(modelMatID, 1, GL_FALSE, &modelMat[0][0]);
+	glUniformMatrix4fv(SBmvpID, 1, GL_FALSE, &mvp[0][0]);
+	glUniformMatrix4fv(SBviewMatID, 1, GL_FALSE, &v[0][0]);
+	glUniformMatrix4fv(SBmodelMatID, 1, GL_FALSE, &modelMat[0][0]);
 
 
 
@@ -309,7 +324,7 @@ void Renderer::renderSkybox(Camera *c, glm::mat4 p, glm::mat4 v)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, skybox->getTexture()->getTextureID());
 	// Set our "myTextureSampler" sampler to use Texture Unit 0
-	glUniform1i(textureID, 0);
+	glUniform1i(skyboxTextID, 0);
 
 	//enable vertex position
 	glEnableVertexAttribArray(0);

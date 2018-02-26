@@ -38,8 +38,8 @@ protected:
 	float lightAttenuation = 1.0;
 
 	ShaderProgram sp;
-
 	ShaderProgram txtShader;
+	ShaderProgram skyboxShader;
 
 
 	GLuint programID;
@@ -56,6 +56,13 @@ protected:
 	GLuint textureID;
 
 	GLuint VertexArrayID;
+
+
+
+	GLuint skyboxTextID;
+	GLuint SBmvpID;
+	GLuint SBviewMatID;
+	GLuint SBmodelMatID;
 
 
 	//text

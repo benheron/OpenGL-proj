@@ -1,8 +1,8 @@
 #include "Model.h"
 
 Model::Model(std::vector<glm::vec3> vertices, std::vector<glm::vec2> UVs, std::vector<glm::vec3> vertNormals, 
-	std::vector<unsigned int> vertexIndices, float width, float height, float depth, glm::vec3 medianPos) :
-	vertices(vertices), UVs(UVs), vertNormals(vertNormals), vertexIndices(vertexIndices), width(width), height(height), depth(depth), median(medianPos)
+	std::vector<unsigned int> vertexIndices, glm::vec3 minPos, glm::vec3 maxPos, float width, float height, float depth, glm::vec3 medianPos) :
+	vertices(vertices), UVs(UVs), vertNormals(vertNormals), vertexIndices(vertexIndices), minPos(minPos), maxPos(maxPos), width(width), height(height), depth(depth), median(medianPos)
 {
 
 	glGenBuffers(1, &normalBuffer);
@@ -157,12 +157,18 @@ void Model::changeUVBUffer(int startIndex, std::vector<glm::vec2> nUVs)
 	/*GLfloat feedback2[84];
 	glGetBufferSubData(GL_ARRAY_BUFFER, NULL, UVs.size() * sizeof(glm::vec2), feedback2);
 */
-
-
-	int d = 0;
-/*
 	
-	std::vector<glm::vec2> bufferContents2;
-	glGetNamedBufferSubData(uvBuffer, startIndex * sizeof(glm::vec2), nUVs.size() * sizeof(glm::vec2), &bufferContents2);*/
 
+
+}
+
+glm::vec3 Model::getMinPos()
+{
+	return minPos;
+}
+
+
+glm::vec3 Model::getMaxPos()
+{
+	return maxPos;
 }

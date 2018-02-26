@@ -11,7 +11,10 @@ fontName(fontName), fontSize(fontSize), theText(theText), timng(timng)
 
 Text::~Text()
 {
-	
+	for (int i = 0; i < textString.size(); i++)
+	{
+		delete textString[i];
+	}
 }
 
 void Text::writeText()

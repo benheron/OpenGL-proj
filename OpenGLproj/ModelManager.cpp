@@ -16,15 +16,7 @@ ModelManager::ModelManager()
 	textures["house"] = testTexture;
 	
 
-	Model *obj2 = objLoad.loadObj("untitled.obj");
-	
 
-	Texture* testTexture2 = new Texture();
-	testTexture2->loadTexture("buildingtexture.png");
-
-
-	models["building"] = obj2;
-	textures["building"] = testTexture2;
 
 	Model *obj3 = objLoad.loadObj("models/militaryplane.obj");
 	Texture* planeText = new Texture();

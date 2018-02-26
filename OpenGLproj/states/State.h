@@ -41,10 +41,7 @@ public:
 	 */
 	virtual void update(float dt) = 0;
 
-	/**
-	@brief Render any sprites relevant to the state
-	*/
-	virtual void render() = 0;
+
 
 	/** @brief Starts loading the state. */
 	void startLoading();

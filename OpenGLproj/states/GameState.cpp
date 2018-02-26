@@ -1,4 +1,5 @@
 #include "GameState.h"
+#include "GameOverState.h"
 
 GameState::GameState(StateManager* manager, Platform *platform, EntityManager *em, KeyboardManager *km, TextImageManager *tim) : State(manager, platform), em(em), km(km), tim(tim)
 {
@@ -17,46 +18,77 @@ bool GameState::eventHandler()
 
 void GameState::update(float dt)
 {
-	score += 20 * dt;
-
-	playerHandling();
-
-	for (int i = 0; i < numBlocks; i++)
+	player->update(dt);
+	if (!gameEnd)
 	{
-		obstacles[i]->addZ(blockSpeed*dt);
+		score += 20 * dt;
 
-		if (obstacles[i]->getHighZ() < -90)
+		playerHandling();
+
+		for (int i = 0; i < numBlocks; i++)
 		{
-			obstacles[i]->changePosition(obstacles[lastBlockIndex]->getHighZ());
-
-			if (lastBlockIndex >= (numBlocks - 1))
+			if (obstacles[i]->collide(player->getBoundingBox()))
 			{
-				lastBlockIndex = 0;
+
+				gameEnd = true;
+
+
 			}
-			else {
-				lastBlockIndex += 1;
+
+
+			obstacles[i]->update(dt);
+			obstacles[i]->addZ(blockSpeed*dt);
+
+
+
+			if (obstacles[i]->getHighZ() < -90)
+			{
+				obstacles[i]->changePosition(obstacles[lastBlockIndex]->getHighZ());
+				obstacles[i]->update(dt);
+
+				if (lastBlockIndex >= (numBlocks - 1))
+				{
+					lastBlockIndex = 0;
+					firstBlockIndex = 1;
+				}
+				else {
+					lastBlockIndex += 1;
+
+					firstBlockIndex++;
+					if (firstBlockIndex >= (numBlocks - 1))
+					{
+						firstBlockIndex = 0;
+					}
+				}
 			}
 		}
+
+
+
+		int curScore = int(score);
+
+		std::string str = std::to_string(curScore);
+
+		scoreInt->changeTextEnd(str);
 	}
 
-	int curScore = int(score);
 
-	std::string str = std::to_string(curScore);
-
-	scoreInt->changeTextEnd(str);
-	
-}
-
-void GameState::render()
-{
+	if (gameEnd)
+	{
+		stateManager->changeState(new GameOverState(stateManager, platform, em, km, tim, score));
+	}
 
 }
+
 
 void GameState::load()
 {
+	gameEnd = false;
+
 	numHousesPerBlock = 20;
 	numBlocks = 5;
 
+	firstBlockIndex = 0;
 	lastBlockIndex = numBlocks - 1;
 
 	distHousetravelled = 0;
@@ -82,8 +114,8 @@ void GameState::load()
 
 	lowX = -48.f;
 	highX = 48.f;
-	lowZ = -48.f;
-	highZ = 48.f;
+	lowZ = 16.f;
+	highZ = 96.f;
 
 	xWidth = highX - lowX;
 	zWidth = highZ - lowZ;
@@ -93,7 +125,7 @@ void GameState::load()
 
 
 	//first position
-	float theZLow = -48.f;
+	float theZLow = lowZ;
 
 
 	for (int i = 0; i < numBlocks; i++)
@@ -127,11 +159,11 @@ void GameState::load()
 
 	//uiload
 	score = 0;
-	scoreWord = new Text(glm::vec3(10.f, 500.f, 0), "arial", 32, "Score:", tim);
+	scoreWord = new Text(glm::vec3(10.f, 550.f, 0), "arial", 32, "Score:", tim);
 
 	
 
-	scoreInt = new Text(glm::vec3(100.f, 500.f, 0), "arial", 32, "0000000", tim);
+	scoreInt = new Text(glm::vec3(100.f, 550.f, 0), "arial", 32, "0000000", tim);
 
 	stateText.push_back(scoreWord);
 	stateText.push_back(scoreInt);
@@ -140,7 +172,13 @@ void GameState::load()
 
 void GameState::unload()
 {
+	for (int i = 0; i < obstacles.size(); i++)
+	{
+		delete obstacles[i];
+	}
 
+	delete scoreInt;
+	delete scoreWord;
 }
 
 

@@ -21,6 +21,11 @@ Entity::Entity(glm::vec3 pos, glm::vec3 dimens) : pos(pos), dimensions(dimens)
 	rightVec = glm::vec3(-1, 0, 0);
 
 	speed = 0.2;
+
+	//bbAllowance = glm::vec3(0.1, 0.1, 0.8);
+	bbAllowance = glm::vec3(0, 0, 0);
+
+
 }
 
 Entity::~Entity()
@@ -28,10 +33,47 @@ Entity::~Entity()
 
 }
 
+void Entity::update(float dt)
+{
+	if (!modelMatChanged)
+	{
+		bb->transformByMat4(modelMatrix);
+		return;
+	}
+
+	modelMatChanged = false;
+
+	glm::mat4 mm = glm::mat4(1.0);
+
+
+	//forwardVec = glm::rotate()
+
+	//translate to new position
+	mm = glm::translate(mm, pos);
+
+	//rotate x
+	mm = glm::rotate(mm, rotPitch, glm::vec3(1, 0, 0));
+	//rotate y
+	mm = glm::rotate(mm, rotYaw, glm::vec3(0, 1, 0));
+	//rotate z
+	mm = glm::rotate(mm, rotRoll, glm::vec3(0, 0, 1));
+
+	//scale
+	mm = glm::scale(mm, modScale);
+
+
+	modelMatrix = mm;
+
+	bb->transformByMat4(modelMatrix);
+
+}
+
 
 void Entity::setModel(Model *m)
 {
 	model = m;
+
+	bb = new BoundingBox(model->getMinPos() + bbAllowance, model->getMaxPos() - bbAllowance);
 }
 
 glm::vec3 Entity::getPosition()
@@ -106,22 +148,21 @@ Texture *Entity::getTexture()
 
 glm::mat4 Entity::getModelMatrix()
 {
-	
 	if (!modelMatChanged)
 	{
 		return modelMatrix;
 	}
 
 	modelMatChanged = false;
-	
+
 	glm::mat4 mm = glm::mat4(1.0);
-	
+
 
 	//forwardVec = glm::rotate()
 
 	//translate to new position
 	mm = glm::translate(mm, pos);
-	
+
 	//rotate x
 	mm = glm::rotate(mm, rotPitch, glm::vec3(1, 0, 0));
 	//rotate y
@@ -134,14 +175,17 @@ glm::mat4 Entity::getModelMatrix()
 
 
 	modelMatrix = mm;
+	
 	return modelMatrix;
 }
 
 
 void Entity::strafeLeft()
 {
-	glm::vec4 v = modelMatrix[0] * speed;
-	glm::vec3 v1(v);
+	/*glm::vec4 v = modelMatrix[0] * speed;
+	glm::vec3 v1(v);*/
+
+	glm::vec3 v1 = -rightVec * speed;
 
 	pos += v1;
 
@@ -152,8 +196,10 @@ void Entity::strafeLeft()
 
 void Entity::strafeRight()
 {
-	glm::vec4 v = modelMatrix[0] * speed;
-	glm::vec3 v1(v);
+	//glm::vec4 v = modelMatrix[0] * speed;
+	//glm::vec3 v1(v);
+
+	glm::vec3 v1 = -rightVec * speed;
 
 	pos -= v1;
 
@@ -193,4 +239,9 @@ glm::vec3 Entity::getDimensions()
 	return dimensions;
 
 
+}
+
+BoundingBox *Entity::getBoundingBox()
+{
+	return bb;
 }

@@ -112,14 +112,6 @@ void StateManager::update(float dt)
 		states.back()->update(dt);
 }
 
-void StateManager::render()
-{
-	for (int i = 0; i < (int)states.size(); i++)
-	{
-		if (states[i] != nullptr && states[i]->isActive())
-			states[i]->render();
-	}
-}
 
 std::vector<State*> StateManager::getStates()
 {

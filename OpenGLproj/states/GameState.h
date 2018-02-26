@@ -1,16 +1,13 @@
 #pragma once
-#include "State.h"
 #include "StateManager.h"
 #include "../entities/EntityManager.h"
-#include "../Entity.h"
 #include "../Keyboard.h"
-#include "../entities/EntityManager.h"
 #include "../text/Text.h"
 #include "../Camera.h"
 #include "../ObstacleBlock.h"
+#include "../Collision.h"
 
-
-
+class GameOverState;
 
 class GameState : public State
 {
@@ -31,16 +28,6 @@ public:
 	@param dt - delta time.
 	*/
 	void update(float dt);
-
-	/**
-	@brief Render any sprites relevant to the state
-	*/
-	void render();
-
-
-	//std::vector<Entity*> getRenderables();
-
-	//std::vector<Entity*> getUIEntities();
 
 	
 protected:
@@ -85,7 +72,7 @@ protected:
 	float blockWidth;
 	int blockIndex;
 
-
+	int firstBlockIndex;
 	int lastBlockIndex;
 
 	float lowX, lowZ, highX, highZ;
@@ -95,4 +82,8 @@ protected:
 	Text *scoreWord;
 
 	float score;
+
+	bool gameEnd;
+
+	
 };

@@ -20,6 +20,8 @@ void main(){
 	vertPosHomSpace -= vec2(400,300);
 	vertPosHomSpace /= vec2(400,300);
 
+	
+
 	//vertPosHomSpace.y = -vertPosHomSpace.y;
 
     gl_Position =  vec4(vertPosHomSpace,0,1);

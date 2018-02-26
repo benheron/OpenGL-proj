@@ -73,8 +73,7 @@ public:
 	*/
 	void update(float dt);
 
-	/** @brief Calls the render for all loaded states. */
-	void render();
+
 
 
 	std::vector<State*> getStates();

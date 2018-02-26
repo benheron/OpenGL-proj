@@ -471,6 +471,9 @@ Model* ObjLoader::loadObj(std::string filePath)
 	float yMid = (yHigh + yLow) / 2;
 	float zMid = (zHigh + zLow) / 2;
 
+	glm::vec3 vMin = glm::vec3(xLow, yLow, zLow);
+	glm::vec3 vMax = glm::vec3(xHigh, yHigh, zHigh);
+
 	glm::vec3 med = glm::vec3(xMid, yMid, zMid);
 
 
@@ -479,7 +482,7 @@ Model* ObjLoader::loadObj(std::string filePath)
 
 
 
-	Model *m2 = new Model(newVertices, newUVs, newVertNormals, newIndices, width, height, depth, med);
+	Model *m2 = new Model(newVertices, newUVs, newVertNormals, newIndices, vMin, vMax, width, height, depth, med);
 
 
 	return m2;

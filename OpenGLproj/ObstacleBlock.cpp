@@ -7,7 +7,18 @@ ObstacleBlock::ObstacleBlock(std::vector<Entity*> blockObstacles) : blockObstacl
 
 ObstacleBlock::~ObstacleBlock()
 {
+	for (int i = 0; i < blockObstacles.size(); i++)
+	{
+		delete blockObstacles[i];
+	}
+}
 
+void ObstacleBlock::update(float dt)
+{
+	for (int i = 0; i < blockObstacles.size(); i++)
+	{
+		blockObstacles[i]->update(dt);
+	}
 }
 
 void ObstacleBlock::setXZLowHigh(float xLow, float xHigh, float zLow, float zHigh, float widthX, float widthZ)
@@ -66,4 +77,19 @@ float ObstacleBlock::getHighZ()
 void ObstacleBlock::generateObstacles(EntityManager *em)
 {
 
+}
+
+bool ObstacleBlock::collide(BoundingBox *bb)
+{
+	bool retVal = false;
+
+	for (int i = 0; i < blockObstacles.size(); i++)
+	{
+		if (Collision::boxBoxCollision(bb, blockObstacles[i]->getBoundingBox()))
+		{
+			retVal = true;
+		}
+	}
+	
+	return retVal; 
 }
