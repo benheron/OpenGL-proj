@@ -3,7 +3,8 @@
 Renderer::Renderer(EntityManager *em) : em(em)
 {
 	
-	if (sp.loadProgram("Shaders/VertShader.vert", "Shaders/FragShader.frag"))
+	if (sp.loadProgram("Shaders/VertShader.vert", "Shaders/FragShader.frag") &&
+		debugShader.loadProgram("Shaders/VertShader.vert", "Shaders/DebugFragShader.frag"))
 	{
 
 

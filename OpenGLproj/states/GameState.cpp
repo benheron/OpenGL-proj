@@ -27,6 +27,8 @@ void GameState::update(float dt)
 
 		for (int i = 0; i < numBlocks; i++)
 		{
+
+
 			if (obstacles[i]->collide(player->getBoundingBox()))
 			{
 

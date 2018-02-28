@@ -31,6 +31,10 @@ protected:
 	void renderSkybox(Camera *c, glm::mat4 p, glm::mat4 v);
 	void renderText(std::vector<Text*> stateText);
 
+	void renderDebug();
+
+
+
 	EntityManager *em;
 
 	glm::vec3 lightInt;
@@ -40,6 +44,7 @@ protected:
 	ShaderProgram sp;
 	ShaderProgram txtShader;
 	ShaderProgram skyboxShader;
+	ShaderProgram debugShader;
 
 
 	GLuint programID;

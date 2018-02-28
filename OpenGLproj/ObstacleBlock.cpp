@@ -85,10 +85,21 @@ bool ObstacleBlock::collide(BoundingBox *bb)
 
 	for (int i = 0; i < blockObstacles.size(); i++)
 	{
-		if (Collision::boxBoxCollision(bb, blockObstacles[i]->getBoundingBox()))
+		
+		/*if (Collision::SATOverlap(bb, blockObstacles[i]->getBoundingBox()))
+		{
+			retVal = true;
+		}*/
+
+		if (Collision::SATIntersection(bb, blockObstacles[i]->getBoundingBox()))
 		{
 			retVal = true;
 		}
+
+		/*if (Collision::boxBoxCollision(bb, blockObstacles[i]->getBoundingBox()))
+		{
+			retVal = true;
+		}*/
 	}
 	
 	return retVal; 
