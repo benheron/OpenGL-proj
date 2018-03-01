@@ -10,6 +10,18 @@ BoundingBox::BoundingBox(glm::vec3 vMin3, glm::vec3 vMax3)
 
 BoundingBox::~BoundingBox()
 {
+	for (int i = 0; i < faces.size(); i++)
+	{
+		delete faces[i];
+		delete newFaces[i];
+	}
+
+	for (int i = 0; i < edges.size(); i++)
+	{
+		delete edges[i];
+		delete newEdges[i];
+	}
+
 
 }
 

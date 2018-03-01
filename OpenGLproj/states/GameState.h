@@ -43,7 +43,7 @@ protected:
 	virtual void unload();
 
 
-	void playerHandling();
+	void playerHandling(float dt);
 
 
 	void generateObstaclesPositions();

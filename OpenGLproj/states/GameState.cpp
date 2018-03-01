@@ -8,7 +8,7 @@ GameState::GameState(StateManager* manager, Platform *platform, EntityManager *e
 
 GameState::~GameState()
 {
-
+	
 }
 
 bool GameState::eventHandler()
@@ -23,7 +23,7 @@ void GameState::update(float dt)
 	{
 		score += 20 * dt;
 
-		playerHandling();
+		playerHandling(dt);
 
 		for (int i = 0; i < numBlocks; i++)
 		{
@@ -185,63 +185,61 @@ void GameState::unload()
 
 
 
-void GameState::playerHandling()
+void GameState::playerHandling(float dt)
 {
-	float x = 0, y = 0, z = 0;
-	//No per frame update needed
-	
+	bool m = false;
+	bool t = false;
 
-	if (km->keyDown("w"))
-	{
-		z -= 0.2;
-		player->moveForward();
-		z -= 0.2;
-		
-	}
-	if (km->keyDown("s"))
-	{
-		z += 0.2;
-		player->moveBackward();
-	}
 	if (km->keyDown("a"))
 	{
-		x -= 0.2;
-		player->strafeLeft();
+		player->moveLeft(dt);
+		m = true;
 	}
+
 	if (km->keyDown("d"))
 	{
-		x += 0.2;
-		player->strafeRight();
+		player->moveRight(dt);
+		m = true;
 	}
 
-	glm::vec3 np = glm::vec3(x, y, z);
 
-	//camera->setPosition(np, true);
-
-	//player->setPosition(np, true);
-
-
-	float rx = 0, rz = 0;
+	if (km->keyDown("left"))
+	{
+		player->rotateFurtherLeft(dt);
+		m = true;
+		t = true;
+	}
 
 	if (km->keyDown("right"))
 	{
-		rx -= 0.03;
+		player->rotateFurtherRight(dt);
+		m = true;
+		t = true;
 	}
-	if (km->keyDown("left"))
+	
+
+	player->setMoving(m);
+	player->setTilting(t);
+
+	float rr = player->getRoll();
+
+	float rotSpeed = 2*dt;
+
+	if (!m)
 	{
-		rx += 0.03;
-	}
-	if (km->keyDown("up"))
-	{
-		rz += 0.1;
-	}
-	if (km->keyDown("down"))
-	{
-		rz -= 0.1;
+		if (rr < -0.02)
+		{
+			rr += rotSpeed;
+		}
+		else if (rr > 0.02) {
+			rr -= rotSpeed;
+		}
+		else {
+			rr = 0;
+		}
 	}
 
-	player->setYaw(rx, true);
-	player->setRoll(rz, true);
+	player->setRoll(rr, false);
 }
 
 void GameState::generateObstaclesPositions()

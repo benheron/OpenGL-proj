@@ -31,20 +31,38 @@ public:
 	//z
 	void setRoll(float rot, bool add);
 
+	float getRoll();
+
+
 	void setScale(glm::vec3 s);
 
 	Model* getModel();
 
 	glm::mat4 getModelMatrix();
 
-	void strafeLeft();
-	void strafeRight();
+	void strafeLeft(float dt);
+	void strafeRight(float dt);
 
-	void moveForward();
+	void moveForward(float dt);
 
-	void moveBackward();
+	void moveBackward(float dt);
 
 	BoundingBox *getBoundingBox();
+
+	//hacky player code
+	void moveRight(float dt);
+	void moveLeft(float dt);
+
+	void setMoving(bool m);
+
+	void setTilting(bool t);
+
+
+
+	void rotateFurtherRight(float dt);
+
+	void rotateFurtherLeft(float dt);
+
 protected:
 	bool modelMatChanged;
 
@@ -74,4 +92,9 @@ protected:
 	BoundingBox *bb;
 
 	glm::vec3 bbAllowance;
+
+
+	bool moving;
+
+	bool tilting;
 };

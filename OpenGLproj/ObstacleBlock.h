@@ -24,6 +24,10 @@ public:
 	float getHighZ();
 
 	glm::vec3 pos;
+
+	
+
+
 private:
 	float lowX, highX, lowZ, highZ;
 	float xWidth, zWidth;
